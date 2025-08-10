@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infográfico de Conjunções</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background-color: #f4f7f6;
+            color: #333;
+            display: flex;
+            min-height: 100vh;
+        }
+        #main-content {
+            flex-grow: 1;
+            padding: 20px;
+        }
+        #ranking-lateral {
+            width: 250px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-left: 1px solid #dee2e6;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            display: none;
+        }
+        #ranking-lateral h3 {
+            color: #0056b3;
+            text-align: center;
+            border-bottom: 2px solid #0056b3;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            margin-top: 20px;
+        }
+        #ranking-lateral ol {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        #ranking-lateral li {
+            background-color: #e9ecef;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+        #ranking-lateral li .nome {
+            font-weight: bold;
+        }
+        
+        h1 {
+            color: #0056b3;
+            text-align: center;
+        }
+        .indice {
+            text-align: center;
+            margin-bottom: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 5px;
+        }
+        .indice a {
+            text-decoration: none;
+            color: #007BFF;
+            padding: 5px 10px;
+            border: 1px solid #007BFF;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            white-space: nowrap;
+        }
+        .indice a:hover {
+            background-color: #007BFF;
+            color: #fff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        thead tr {
+            background-color: #007BFF;
+            color: #fff;
+        }
+        .coordenativa {
+            background-color: #e6f2ff;
+        }
+        .subordinativa {
+            background-color: #f7f7f7;
+        }
+        tbody tr:hover {
+            background-color: #d1e2f7;
+        }
+        .categoria {
+            font-weight: bold;
+            color: #007BFF;
+            font-size: 1.1em;
+        }
+        .conectivos {
+            font-family: 'Courier New', Courier, monospace;
+            color: #555;
+        }
+        .dica, .macete {
+            font-style: italic;
+            color: #6c757d;
+        }
+        .macete {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .conj-destaque {
+            font-weight: bold;
+            color: #6a1a7b;
+            font-size: 1.1em;
+        }
+        .nota-box {
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .importante {
+            font-weight: bold;
+            color: #dc3545;
+        }
+        
+        #quiz-section, #simulado-section {
+            margin-top: 50px;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+        #quiz-section {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+        }
+        #simulado-section {
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+        }
+        #quiz-section h2 {
+            color: #155724;
+            margin-bottom: 20px;
+        }
+        #simulado-section h2 {
+            color: #0c5460;
+            margin-bottom: 20px;
+        }
+        #quiz-phrase, #simulado-pergunta {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 5px;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #quiz-controls button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            border: none;
+            color: #fff;
+        }
+        #generate-btn {
+            background-color: #28a745;
+        }
+        #check-btn, #iniciar-simulado-btn {
+            background-color: #007BFF;
+        }
+        #quiz-input {
+            margin: 10px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        #quiz-feedback, #simulado-feedback {
+            margin-top: 10px;
+            font-weight: bold;
+            line-height: 1.5;
+        }
+        #quiz-feedback .resposta {
+            color: green;
+        }
+        #quiz-feedback .incorreta {
+            color: red;
+        }
+        #simulado-opcoes {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        #simulado-opcoes button {
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f8f9fa;
+            text-align: left;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        #simulado-opcoes button.selected {
+            background-color: #e2e6ea;
+        }
+        #simulado-opcoes button:hover {
+            background-color: #e2e6ea;
+        }
+        .opc-correta {
+            background-color: #28a745 !important;
+            color: #fff;
+        }
+        .opc-incorreta {
+            background-color: #dc3545 !important;
+            color: #fff;
+        }
+        #exemplos-detalhados {
+            margin-top: 50px;
+            background-color: #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        #btn-toggle {
+            display: block;
+            margin: 0 auto;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        #btn-toggle:hover {
+            background-color: #0056b3;
+        }
+        #exemplos-detalhados-conteudo {
+            margin-top: 20px;
+        }
+        #exemplos-detalhados-conteudo h3 {
+            color: #0056b3;
+            margin-top: 30px;
+            border-bottom: 2px solid #0056b3;
+            padding-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        #exemplos-detalhados-conteudo p {
+            background-color: #fff;
+            padding: 10px;
+            border-left: 4px solid #007BFF;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        #exemplos-detalhados-conteudo p span {
+            font-weight: bold;
+            color: #6a1a7b;
+        }
+        .voltar-topo {
+            font-size: 12px;
+            text-decoration: none;
+            color: #007BFF;
+            font-weight: normal;
+        }
+        .voltar-topo:hover {
+            text-decoration: underline;
+        }
+
+        #ajudas-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .ajuda-btn {
+            background-color: #ffc107;
+            color: #333;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .ajuda-btn.usada {
+            background-color: #ccc;
+            cursor: not-allowed;
+            color: #666;
+        }
+        #pulos-restantes {
+            font-weight: bold;
+        }
+        #dica-box {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            border-radius: 5px;
+            font-style: italic;
+            display: none;
+            text-align: left;
+        }
+    
+    #ranking-notice {
+        display: none;
+    }
+    #ranking-notice.success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+    #ranking-notice.info {
+        background-color: #d1ecf1;
+        color: #0c5460;
+        border: 1px solid #bee5eb;
+    }
+    #ranking-notice.error {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+    #reset-ranking-btn-bottom {
+        display: block;
+        margin: 50px auto 20px auto;
+        padding: 5px 10px;
+        font-size: 12px;
+        cursor: pointer;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        background-color: #f8f9fa;
+        color: #6c757d;
+        width: auto;
+    }
+    #reset-ranking-btn-bottom:hover {
+        background-color: #e9ecef;
+    }
+    
+    /* Novo estilo para a lista de conjunções no quiz */
+    #lista-conjuncoes {
+        font-size: 12px;
+        text-align: left;
+        margin: 10px auto;
+        padding: 10px;
+        background-color: #f8f9fa;
+        border-radius: 5px;
+        display: inline-block;
+        max-width: 90%;
+    }
+    #lista-conjuncoes h4 {
+        margin: 0 0 5px 0;
+        font-size: 1em;
+        color: #6c757d;
+    }
+    #lista-conjuncoes ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        columns: 2;
+        -webkit-columns: 2;
+        -moz-columns: 2;
+    }
+    </style>
+</head>
+<body>
+
+    <a id="inicio"></a>
+    <div id="main-content">
+        <h1>Guia de Conjunções</h1>
+
+        <div class="indice">
+            <a href="#aditivas-detalhes">Aditivas</a>
+            <a href="#adversativas-detalhes">Adversativas</a>
+            <a href="#alternativas-detalhes">Alternativas</a>
+            <a href="#conclusivas-detalhes">Conclusivas</a>
+            <a href="#explicativas-detalhes">Explicativas</a>
+            <a href="#causais-detalhes">Causais</a>
+            <a href="#consecutivas-detalhes">Consecutivas</a>
+            <a href="#concessivas-detalhes">Concessivas</a>
+            <a href="#comparativas-detalhes">Comparativas</a>
+            <a href="#condicionais-detalhes">Condicionais</a>
+            <a href="#conformativas-detalhes">Conformativas</a>
+            <a href="#finais-detalhes">Finais</a>
+            <a href="#proporcionais-detalhes">Proporcionais</a>
+            <a href="#temporais-detalhes">Temporais</a>
+            <a href="#quiz-section">Teste de Frases</a>
+            <a href="#simulado-section">Simulado</a>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Tipo de Conjunção</th>
+                    <th>Conectivos</th>
+                    <th>Exemplos</th>
+                    <th>Dicas de Identificação</th>
+                    <th>Macetes</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="coordenativa">
+                    <td class="categoria">Aditivas</td>
+                    <td class="conectivos">e, <span class="importante">nem</span>, mas também, não só...</td>
+                    <td>Ele não só fez um péssimo trabalho <span class="conj-destaque">como também</span> cobrou caro.</td>
+                    <td class="dica">Adicionam uma ideia de soma, acréscimo ou continuidade.</td>
+                    <td class="macete">Soma: "E..."</td>
+                </tr>
+                <tr class="coordenativa">
+                    <td class="categoria">Adversativas</td>
+                    <td class="conectivos"><span class="importante">mas</span>, porém, contudo, todavia...</td>
+                    <td>Este é um bom livro, <span class="conj-destaque">todavia</span> custa caro.</td>
+                    <td class="dica">Indicam oposição, contraste ou quebra de expectativa.</td>
+                    <td class="macete">Contrário: "Mas..."</td>
+                </tr>
+                <tr class="coordenativa">
+                    <td class="categoria">Alternativas</td>
+                    <td class="conectivos">ou...ou, ora...ora, já...já, quer...quer...</td>
+                    <td><span class="conj-destaque">Ou</span> ele segue seu comportamento, <span class="conj-destaque">ou</span> muda-se daqui!</td>
+                    <td class="dica">Apresentam uma escolha, uma opção ou alternância.</td>
+                    <td class="macete">Escolha: "Ou..."</td>
+                </tr>
+                <tr class="coordenativa">
+                    <td class="categoria">Conclusivas</td>
+                    <td class="conectivos">Logo, <span class="importante">pois</span>, portanto, por conseguinte...</td>
+                    <td>Você estudou, <span class="conj-destaque">portanto</span> será aprovado!</td>
+                    <td class="dica">Introduzem uma conclusão, consequência ou dedução.</td>
+                    <td class="macete">Conclusão: "Então..."</td>
+                </tr>
+                <tr class="coordenativa">
+                    <td class="categoria">Explicativas</td>
+                    <td class="conectivos"><span class="importante">Pois</span>, que, porque, porquanto</td>
+                    <td>Não se prejudique, <span class="conj-destaque">porque</span> você pode ser prejudicado!</td>
+                    <td class="dica">Dão uma razão ou justificativa para a frase anterior.</td>
+                    <td class="macete">Motivo: "Por quê?"</td>
+                </tr>
+                <tr class="subordinativa">
+                    <td class="categoria">Causais</td>
+                    <td class="conectivos"><span class="importante">Pois</span>, porque, visto que, como...</td>
+                    <td>A torcida aclamou <span class="conj-destaque">porque</span> o gol foi lindo!</td>
+                    <td class="dica">Indicam a causa ou o motivo de uma ação.</td>
+                    <td class="macete">Causa: "Por causa de..."</td>
+                </tr>
+                <tr class="subordinativa">
+                    <td class="categoria">Consecutivas</td>
+                    <td class="conectivos">Tão...que, de modo que, de maneira que...</td>
+                    <td>O susto foi tamanho <span class="conj-destaque">que</span> ele precisou tomar calmante.</td>
+                    <td class="dica">Expressam uma consequência, resultado ou efeito.</td>
+                    <td class="macete">Consequência: "Tanto que..."</td>
+                </tr>
+                <tr class="subordinativa">
+                    <td class="categoria">Concessivas</td>
+                    <td class="conectivos">Embora, conquanto, ainda que...</td>
+                    <td><span class="conj-destaque">Embora</span> fosse tímido, ele fez um ótimo discurso.</td>
+                    <td class="dica">Indicam uma ideia contrária, um fato que não impede a ação.</td>
+                    <td class="macete">Contrário que não impede.</td>
+                </tr>
+                <tr class="subordinativa">
+                    <td class="categoria">Comparativas</td>
+                    <td class="conectivos">mais...que, menos...que...</td>
+                    <td>O enfermeiro foi <span class="conj-destaque">mais eficiente que</span> o médico.</td>
+                    <td class="dica">Estabelecem uma comparação entre dois termos.</td>
+                    <td class="macete">Comparação: "Como..."</td>
+                </tr>
+                <tr class="subordinativa">
+                    <td class="categoria">Condicionais</td>
+                    <td class="conectivos">Se, caso, desde que...</td>
+                    <td><span class="conj-destaque">Se</span> você trabalhar, terá boas perspectivas.</td>
+                    <td class="dica">Expressam uma condição necessária para a ocorrência de algo.</td>
+                    <td class="macete">Condição: "Se..."</td>
+                </tr>
+                <tr class="subordinativa">
+                    <td class="categoria">Conformativas</td>
+                    <td class="conectivos">Conforme, como, segundo</td>
+                    <td><span class="conj-destaque">Segundo</span> o perito, o equipamento não sofreu dano.</td>
+                    <td class="dica">Indicam conformidade, um acordo ou uma fonte.</td>
+                    <td class="macete">Conforme: "De acordo com..."</td>
+                </tr>
+                <tr class="subordinativa">
+                    <td class="categoria">Finais</td>
+                    <td class="conectivos">Para que, a fim de que...</td>
+                    <td>Os policiais trabalham <span class="conj-destaque">para que</span> a segurança seja mantida.</td>
+                    <td class="dica">Expressam a finalidade, o propósito ou o objetivo de uma ação.</td>
+                    <td class="macete">Finalidade: "Para que..."</td>
+                </tr>
+                <tr class="subordinativa">
+                    <td class="categoria">Proporcionais</td>
+                    <td class="conectivos">À proporção que, à medida que...</td>
+                    <td>Os recursos aumentam <span class="conj-destaque">à medida que</span> os projetos se desenvolvem.</td>
+                    <td class="dica">Relacionam dois fatos que ocorrem ao mesmo tempo, de forma proporcional.</td>
+                    <td class="macete">Proporção: "Quanto mais..."</td>
+                </tr>
+                <tr class="subordinativa">
+                    <td class="categoria">Temporais</td>
+                    <td class="conectivos">Quando, enquanto, logo que...</td>
+                    <td><span class="conj-destaque">Enquanto</span> os políticos descansam, os brasileiros trabalham.</td>
+                    <td class="dica">Referem-se a um momento ou um tempo em que algo acontece.</td>
+                    <td class="macete">Tempo: "Quando..."</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="nota-box">
+            <p><strong>Observações importantes:</strong></p>
+            <ul>
+                <li>As linhas destacadas em <strong>azul claro</strong> representam as <strong>Conjunções Coordenativas</strong>.</li>
+                <li>As linhas destacadas em <strong>cinza claro</strong> representam as <strong>Conjunções Subordinativas Adverbiais</strong>.</li>
+                <li>Conjunções em <span class="importante">vermelho e negrito</span> são importantes para se estudar, pois costumam causar confusão devido a suas semelhanças e a aparecerem em mais de uma categoria.</li>
+            </ul>
+        </div>
+        
+        <section id="quiz-section">
+            <a id="teste-de-frases"></a>
+            <h2>Teste seu Conhecimento!</h2>
+            <div id="lista-conjuncoes">
+                <h4>Lista de Tipos de Conjunções</h4>
+                <ul>
+                    <li>Aditivas</li>
+                    <li>Adversativas</li>
+                    <li>Alternativas</li>
+                    <li>Causais</li>
+                    <li>Comparativas</li>
+                    <li>Concessivas</li>
+                    <li>Condicionais</li>
+                    <li>Conformativas</li>
+                    <li>Conclusivas</li>
+                    <li>Consecutivas</li>
+                    <li>Explicativas</li>
+                    <li>Finais</li>
+                    <li>Proporcionais</li>
+                    <li>Temporais</li>
+                </ul>
+            </div>
+            <p>Clique em "Gerar Frase" e tente identificar o tipo de conjunção. O jogo termina ao primeiro erro.</p>
+            <div id="quiz-phrase"></div>
+            <div id="quiz-controls">
+                <button id="generate-btn">Gerar Frase</button>
+                <input type="text" id="quiz-input" placeholder="Digite o tipo aqui...">
+                <button id="check-btn">Verificar</button>
+            </div>
+            <div id="quiz-feedback"></div>
+        </section>
+
+        <section id="simulado-section">
+            <a id="simulado"></a>
+            <h2>Modo Simulado (Jogo do Milhão)</h2>
+            <p>Responda às perguntas e use suas ajudas com sabedoria! O jogo termina ao primeiro erro ou ao completar todas as questões.</p>
+            
+            <div id="simulado-game" style="display: none;">
+                <div id="ajudas-container">
+                    <button id="dica-btn" class="ajuda-btn">Dica</button>
+                    <button id="pular-btn" class="ajuda-btn">Pular (<span id="pulos-restantes">3</span>)</button>
+                </div>
+                <div id="simulado-pergunta"></div>
+                <div id="dica-box"></div>
+                <div id="simulado-opcoes"></div>
+                <div id="simulado-feedback"></div>
+            </div>
+            
+            <button id="iniciar-simulado-btn" style="margin-top: 20px; padding: 10px 20px; font-size: 16px; cursor: pointer; border-radius: 5px; border: none; color: #fff; background-color: #007BFF;">Iniciar Jogo</button>
+        </section>
+
+        <section id="exemplos-detalhados">
+            <h2>Exemplos Detalhados por Conectivo</h2>
+            <button id="btn-toggle" onclick="toggleConteudo()">Esconder exemplos</button>
+
+            <div id="exemplos-detalhados-conteudo">
+                <h3 id="aditivas-detalhes">Aditivas <a href="#inicio" class="voltar-topo">Voltar ao Início</a></h3>
+                <p>Ele estudou para o teste <span class="conj-destaque">e</span> tirou uma boa nota.</p>
+                <p>Não fui ao cinema <span class="conj-destaque">nem</span> ao teatro.</p>
+                <p>Ele não só ajudou na cozinha, <span class="conj-destaque">mas também</span> lavou a louça.</p>
+                <p><span class="conj-destaque">Não só</span> o pai, <span class="conj-destaque">bem como</span> o filho participaram do evento.</p>
+                <p>Ele não gosta de doces, <span class="conj-destaque">tampouco</span> de salgados.</p>
+                <p><span class="conj-destaque">Tanto</span> o inglês <span class="conj-destaque">quanto</span> o espanhol são línguas difíceis.</p>
+
+                <h3 id="adversativas-detalhes">Adversativas <a href="#inicio" class="voltar-topo">Voltar ao Início</a></h3>
+                <p>Estudou bastante, <span class="conj-destaque">mas</span> não passou no exame.</p>
+                <p>O carro é velho, <span class="conj-destaque">porém</span> funciona perfeitamente.</p>
+                <p>A situação é complexa, <span class="conj-destaque">contudo</span> tem solução.</p>
+                <p>Queria viajar, <span class="conj-destaque">todavia</span> não tenho dinheiro.</p>
+                <p>Acredito no seu potencial, <span class="conj-destaque">no entanto</span>, preciso de resultados.</p>
+                <p>Correu muito, <span class="conj-destaque">entretanto</span>, não alcançou o fugitivo.</p>
+                <p>Ainda não comprei os ingressos, <span class="conj-destaque">senão</span> já estaria no show.</p>
+                <p>Ele gosta de estudar, <span class="conj-destaque">não obstante</span>, prefere sair com os amigos.</p>
+
+                <h3 id="alternativas-detalhes">Alternativas <a href="#inicio" class="voltar-topo">Voltar ao Início</a></h3>
+                <p><span class="conj-destaque">Ou</span> você estuda agora, <span class="conj-destaque">ou</span> vai mal na prova.</p>
+                <p>Ela está feliz <span class="conj-destaque">ou</span> triste?</p>
+                <p><span class="conj-destaque">Ora</span> ele chora, <span class="conj-destaque">ora</span> ele ri.</p>
+                <p><span class="conj-destaque">Já</span> caminhamos, <span class="conj-destaque">já</span> corremos.</p>
+                <p><span class="conj-destaque">Quer</span> chova, <span class="conj-destaque">quer</span> faça sol, farei o passeio.</p>
+                <p><span class="conj-destaque">Seja</span> por amor, <span class="conj-destaque">seja</span> por dinheiro, ele faria o trabalho.</p>
+
+                <h3 id="conclusivas-detalhes">Conclusivas <a href="#inicio" class="voltar-topo">Voltar ao Início</a></h3>
+                <p>Ele prometeu, <span class="conj-destaque">logo</span> deve cumprir.</p>
+                <p>Tenho de estudar, devo, <span class="conj-destaque">pois</span>, ir para casa.</p>
+                <p>O prazo acabou, <span class="conj-destaque">portanto</span> o projeto não foi entregue.</p>
+                <p>As chuvas foram intensas, <span class="conj-destaque">por conseguinte</span>, a colheita foi prejudicada.</p>
+                <p>O candidato é esforçado, <span class="conj-destaque">assim</span>, tem grandes chances de vencer.</p>
+                <p>Ele foi avisado, <span class="conj-destaque">então</span> não pode reclamar.</p>
+                <p>A prova será fácil, <span class="conj-destaque">desse modo</span> não se preocupe.</p>
+
+                <h3 id="explicativas-detalhes">Explicativas <a href="#inicio" class="voltar-topo">Voltar ao Início</a></h3>
+                <p>Fique quieto, <span class="conj-destaque">pois</span> vou contar uma história.</p>
+                <p>Venha logo, <span class="conj-destaque">que</span> a comida está na mesa.</p>
+                <p>Não grite, <span class="conj-destaque">porque</span> o bebê está dormindo.</p>
+                <p>Não demore, <span class="conj-destaque">porquanto</span> o tempo está se esgotando.</p>
+
+                <h3 id="causais-detalhes">Causais <a href="#inicio" class="voltar-topo">Voltar ao Início</a></h3>
+                <p>Ele está feliz <span class="conj-destaque">porque</span> ganhou um presente.</p>
+                <p><span class="conj-destaque">Como</span> a porta estava aberta, o cachorro fugiu.</p>
+                <p>Eu gosto dela <span class="conj-destaque">uma vez que</span> ela me trata bem.</p>
+                <p>O projeto foi aprovado <span class="conj-destaque">visto que</span> todos votaram a favor.</p>
+                <p>Viajamos de carro <span class="conj-destaque">já que</span> não havia passagens aéreas.</p>
+                <p>O chão está molhado <span class="conj-destaque">dado que</span> choveu a noite toda.</p>
+                <p>Ele foi punido <span class="conj-destaque">que</span> não respeitou as regras.</p>
+                <p><span class="conj-destaque">Pois</span> não havia água, fomos até a fonte.</p>
+
+                <h3 id="consecutivas-detalhes">Consecutivas <a href="#inicio" class="voltar-topo">Voltar ao Início</a></h3>
+                <p>Ela estudou <span class="conj-destaque">tanto que</span> passou no vestibular.</p>
+                <p>A fala foi de <span class="conj-destaque">tal</span> forma confusa <span class="conj-destaque">que</span> ninguém entendeu.</p>
+                <p>A chuva foi forte, <span class="conj-destaque">de modo que</span> a rua ficou alagada.</p>
+                <p>Ele é tão inteligente <span class="conj-destaque">que</span> entende qualquer assunto.</p>
+                <p>O professor explicou de <span class="conj-destaque">sorte que</span> todos compreenderam.</p>
+
+                <h3 id="concessivas-detalhes">Concessivas <a href="#inicio" class="voltar-topo">Voltar ao Início</a></h3>
+                <p><span class="conj-destaque">Embora</span> estivesse cansado, ele terminou o trabalho.</p>
+                <p>Ele não reclamou, <span class="conj-destaque">ainda que</span> não tenha gostado da comida.</p>
+                <p>Apesar de ser inverno, <span class="conj-destaque">se bem que</span> o tempo está quente.</p>
+
+                <h3 id="comparativas-detalhes">Comparativas <a href="#inicio" class="voltar-topo">Voltar ao Início</a></h3>
+                <p>Ela é <span class="conj-destaque">tão bonita quanto</span> inteligente.</p>
+                <p>Ele corre <span class="conj-destaque">mais que</span> o irmão.</p>
+                <p>Ele é <span class="conj-destaque">menos produtivo que</span> os colegas.</p>
+                <p>Ele foi julgado <span class="conj-destaque">assim como</span> os outros.</p>
+                <p>Ele trabalha <span class="conj-destaque">como</span> um escravo.</p>
+
+                <h3 id="condicionais-detalhes">Condicionais <a href="#inicio" class="voltar-topo">Voltar ao Início</a></h3>
+                <p><span class="conj-destaque">Se</span> o tempo permitir, iremos à praia.</p>
+                <p>Entrarei em contato <span class="conj-destaque">caso</span> você mude de ideia.</p>
+                <p>Não irei à festa <span class="conj-destaque">a não ser que</span> você me convença.</p>
+                <p>Eu te ajudo <span class="conj-destaque">desde que</span> você me ajude depois.</p>
+                <p>Não sairemos <span class="conj-destaque">salvo se</span> ele chegar.</p>
+
+                <h3 id="conformativas-detalhes">Conformativas <a href="#inicio" class="voltar-topo">Voltar ao Início</a></h3>
+                <p>Ele fez a maquete <span class="conj-destaque">conforme</span> o projeto.</p>
+                <p>Ele se comportou <span class="conj-destaque">como</span> lhe ensinaram.</p>
+                <p><span class="conj-destaque">Segundo</span> o professor, a prova será fácil.</p>
+                <p>A montagem foi feita <span class="conj-destaque">consoante</span> as instruções.</p>
+
+                <h3 id="finais-detalhes">Finais <a href="#inicio" class="voltar-topo">Voltar ao Início</a></h3>
+                <p>Estudou muito <span class="conj-destaque">para que</span> pudesse ser aprovado.</p>
+                <p>Ele se sacrificou <span class="conj-destaque">a fim de que</span> a família pudesse viver em paz.</p>
+                <p>Trabalhei duro <span class="conj-destaque">de modo que</span> pudesse comprar um carro.</p>
+                <p>Todos se reuniram <span class="conj-destaque">de forma que</span> pudessem decidir juntos.</p>
+                <p>Ela me ligou <span class="conj-destaque">a fim de</span> me convidar para a festa.</p>
+                
+                <h3 id="proporcionais-detalhes">Proporcionais <a href="#inicio" class="voltar-topo">Voltar ao Início</a></h3>
+                <p><span class="conj-destaque">À medida que</span> ele corria, o cansaço aumentava.</p>
+                <p><span class="conj-destaque">À proporção que</span> o tempo passava, a ansiedade aumentava.</p>
+                <p><span class="conj-destaque">Quanto mais</span> ele falava, <span class="conj-destaque">mais</span> as pessoas se irritavam.</p>
+                <p><span class="conj-destaque">Menos</span> ele estuda, <span class="conj-destaque">menos</span> ele aprende.</p>
+                
+                <h3 id="temporais-detalhes">Temporais <a href="#inicio" class="voltar-topo">Voltar ao Início</a></h3>
+                <p><span class="conj-destaque">Quando</span> a neve começou, ele se abrigou.</p>
+                <p>Ele jogava videogame <span class="conj-destaque">enquanto</span> a irmã fazia a lição.</p>
+                <p>Ela me ligou <span class="conj-destaque">assim que</span> chegou.</p>
+                <p>Eu vou ficar aqui <span class="conj-destaque">até que</span> ele volte.</p>
+                <p><span class="conj-destaque">Logo que</span> ele saiu, o telefone tocou.</p>
+                <p><span class="conj-destaque">Depois que</span> a chuva parou, saímos para o quintal.</p>
+                <p><span class="conj-destaque">Desde que</span> ela foi embora, o silêncio reina na casa.</p>
+            </div>
+        </section>
+        <button id="reset-ranking-btn-bottom" onclick="resetRanking()">Resetar Ranking</button>
+    </div>
+
+    <div id="ranking-lateral">
+        <h3>Ranking</h3>
+        <div>
+            <h4>Teste de Frases</h4>
+            <ol id="ranking-list-frases"></ol>
+        </div>
+        <div>
+            <h4>Modo Simulado</h4>
+            <ol id="ranking-list-simulado"></ol>
+        </div>
+    
+        <div id="ranking-notice" style="display:none; margin-top:10px; padding:10px; border-radius:5px; font-weight:bold; text-align:center;"></div>
+    </div>
+
+    <script>
+        const quizPhrases = [
+            { text: "Ele chegou cedo e começou a trabalhar.", type: "Aditiva", tip: "As conjunções aditivas indicam soma ou acréscimo de ideias. Fique atento a 'e', 'nem' e locuções como 'mas também'!" },
+            { text: "Ela queria ir à praia, mas o tempo não permitiu.", type: "Adversativa", tip: "As conjunções adversativas expressam oposição ou contraste. 'Mas' e 'porém' são as mais comuns. Lembre-se que elas quebram a expectativa." },
+            { text: "Ou você estuda, ou você vai mal na prova.", type: "Alternativa", tip: "As conjunções alternativas indicam uma escolha, alternância ou exclusão. As mais usadas são 'ou' e 'ora'." },
+            { text: "Pensei, logo existo.", type: "Conclusiva", tip: "As conjunções conclusivas introduzem uma conclusão. 'Logo' é uma das mais diretas e fáceis de identificar. 'Portanto' e 'assim' também são importantes." },
+            { text: "Fique em silêncio, pois a aula vai começar.", type: "Explicativa", tip: "As conjunções explicativas dão uma justificativa ou razão para uma ordem. A conjunção 'pois' é explicativa quando vem antes do verbo, como na frase acima." },
+            { text: "Chorei porque a cebola me fez chorar.", type: "Causal", tip: "As conjunções causais indicam a causa ou o motivo de algo. 'Porque' é a mais comum, respondendo à pergunta 'por que isso aconteceu?'." },
+            { text: "A prova foi tão difícil que ninguém conseguiu terminar.", type: "Consecutiva", tip: "As conjunções consecutivas expressam uma consequência. Elas geralmente vêm em pares como 'tão... que', 'tanto... que', 'tal... que'." },
+            { text: "Embora estivesse doente, ele foi ao trabalho.", type: "Concessiva", tip: "As conjunções concessivas indicam uma ideia contrária que não impede a ação principal. 'Embora' é a mais clássica." },
+            { text: "Ele canta como um anjo.", type: "Comparativa", tip: "As conjunções comparativas estabelecem uma comparação. 'Como', 'assim como', e as construções 'mais que' ou 'menos que' são bons indicadores." },
+            { text: "Se você me ajudar, eu te ajudo.", type: "Condicional", tip: "As conjunções condicionais expressam uma condição para que algo aconteça. A conjunção 'se' é o exemplo mais claro." },
+            { text: "Tudo aconteceu conforme o combinado.", type: "Conformativa", tip: "As conjunções conformativas indicam conformidade ou um acordo. Pense em 'de acordo com'." },
+            { text: "Ela fez dieta para que pudesse emagrecer.", type: "Final", tip: "As conjunções finais expressam a finalidade ou o objetivo de uma ação. Elas respondem à pergunta 'para que?'." },
+            { text: "Quanto mais estudo, mais aprendo.", type: "Proporcional", tip: "As conjunções proporcionais indicam uma relação de proporção. Fique atento a construções como 'à medida que', 'quanto mais... mais'." },
+            { text: "Quando ele chegou, eu fui embora.", type: "Temporal", tip: "As conjunções temporais indicam o tempo em que uma ação ocorre. 'Quando', 'enquanto' e 'assim que' são as mais usadas." },
+            { text: "O sol nasceu e as flores se abriram.", type: "Aditiva", tip: "A conjunção 'e' soma duas ações ou fatos." },
+            { text: "Ele é inteligente, mas é preguiçoso.", type: "Adversativa", tip: "A conjunção 'mas' indica oposição entre as ideias." },
+            { text: "Ora chove, ora faz sol.", type: "Alternativa", tip: "O par 'ora... ora' indica alternância de ações ou estados." },
+            { text: "Choveu a noite toda, portanto o jogo foi cancelado.", type: "Conclusiva", tip: "A conjunção 'portanto' introduz a conclusão de um fato anterior." },
+            { text: "A porta está trancada, porque a luz está apagada.", type: "Explicativa", tip: "O 'porque' aqui explica a razão para a dedução sobre a porta." },
+            { text: "Corri porque estava atrasado.", type: "Causal", tip: "O 'porque' responde ao motivo: 'por que corri?'." },
+            { text: "Fez tanto frio que nevou.", type: "Consecutiva", tip: "A construção 'tanto que' indica a consequência do frio." },
+            { text: "Embora estivesse escuro, consegui enxergar.", type: "Concessiva", tip: "O 'embora' mostra que a escuridão não impediu a ação de enxergar." },
+            { text: "Ele é mais rápido que um raio.", type: "Comparativa", tip: "A expressão 'mais que' estabelece uma comparação de velocidade." },
+            { text: "Irei à festa, caso você vá também.", type: "Condicional", tip: "A conjunção 'caso' estabelece uma condição para a ação principal." },
+            { text: "Conforme o regimento, a reunião será amanhã.", type: "Conformativa", tip: "'Conforme' indica que a ação está em conformidade com o regimento." },
+            { text: "Trabalhei muito a fim de que pudesse comprar o carro.", type: "Final", tip: "A locução 'a fim de que' indica o objetivo do trabalho." },
+            { text: "À medida que os dias passam, a saudade aumenta.", type: "Proporcional", tip: "'À medida que' indica uma proporção entre o tempo e a saudade." },
+            { text: "Enquanto eles conversavam, o tempo passava.", type: "Temporal", tip: "'Enquanto' indica uma simultaneidade de ações no tempo." },
+            { text: "O sol brilha e a vida é mais bonita.", type: "Aditiva", tip: "A conjunção 'e' junta duas ideias que se somam." },
+            { text: "Ele não queria ir, todavia foi convidado.", type: "Adversativa", tip: "'Todavia' introduz uma ideia oposta à vontade dele." },
+            { text: "Escolha uma roupa, já que vamos sair.", type: "Causal", tip: "'Já que' justifica a necessidade de escolher uma roupa." },
+            { text: "Era tão pobre que não tinha o que comer.", type: "Consecutiva", tip: "A construção 'tão que' indica a consequência da pobreza." },
+            { text: "Vou terminar o projeto, ainda que demore.", type: "Concessiva", tip: "'Ainda que' introduz uma condição contrária que não impede a ação." },
+            { text: "Ela é tão bonita quanto inteligente.", type: "Comparativa", tip: "O par 'tão... quanto' compara duas qualidades de forma equivalente." },
+            { text: "Seja honesto com seus colegas, salvo se for para protegê-los.", type: "Condicional", tip: "A locução 'salvo se' indica uma exceção à regra de honestidade." },
+            { text: "Consoante o combinado, todos chegaram cedo.", type: "Conformativa", tip: "A conjunção 'consoante' indica que todos agiram de acordo com o combinado." },
+            { text: "Ele correu para que não perdesse o ônibus.", type: "Final", tip: "O 'para que' indica o propósito da corrida." },
+            { text: "Quanto menos ele dorme, menos produtivo ele se torna.", type: "Proporcional", tip: "O par 'quanto menos... menos' indica uma proporção de causa e efeito." },
+            { text: "Depois que a reunião acabou, fomos embora.", type: "Temporal", tip: "'Depois que' indica o tempo, a ordem cronológica dos fatos." },
+            { text: "O homem falava e gesticulava ao mesmo tempo.", type: "Aditiva", tip: "O 'e' adiciona uma ação à outra, indicando simultaneidade." },
+            { text: "Apesar de ter medo, ele saltou.", type: "Concessiva", tip: "'Apesar de' indica uma ideia contrária (o medo) que não impediu o salto." },
+            { text: "Não fez o trabalho, tampouco a lição.", type: "Aditiva", tip: "A conjunção 'tampouco' é uma conjunção aditiva com sentido de negação, somando duas ações negativas." },
+            { text: "Não saia de casa, porque a rua está escura.", type: "Explicativa", tip: "'Porque' aqui está justificando uma ordem. Pode ser substituída por 'pois'." },
+            { text: "O time jogou mal, por isso perdeu.", type: "Conclusiva", tip: "'Por isso' introduz a conclusão lógica de que jogar mal leva à derrota." }
+        ];
+
+        let shuffledQuizPhrases = [];
+        let currentQuizIndex = 0;
+        let quizScore = 0;
+        let quizActive = false;
+        
+        let pulos = 3;
+        let dicaUsada = false;
+        
+        const simuladoQuestions = [
+            {
+                pergunta: "Em 'O time perdeu, pois o ataque não rendeu.', a conjunção 'pois' expressa:",
+                opcoes: [
+                    { texto: "Conclusão", correta: false },
+                    { texto: "Adição", correta: false },
+                    { texto: "Causa", correta: true, explicacao: "A conjunção 'pois', quando está na ordem direta da frase (depois do verbo) e pode ser substituída por 'porque', indica uma causa." },
+                    { texto: "Explicação", correta: false }
+                ],
+                dica: "A conjunção 'pois' pode ser causal ou explicativa. Pense se ela está dando uma razão ou uma justificativa."
+            },
+            {
+                pergunta: "Qual conjunção pode substituir 'de modo que' na frase 'Falei alto de modo que todos ouvissem.' sem alterar o sentido?",
+                opcoes: [
+                    { texto: "Desde que", correta: false },
+                    { texto: "A fim de que", correta: true, explicacao: "'De modo que', neste contexto, tem valor de finalidade, indicando o objetivo da ação ('falar alto'). 'A fim de que' também expressa finalidade." },
+                    { texto: "Embora", correta: false },
+                    { texto: "Porque", correta: false }
+                ],
+                dica: "Tente reescrever a frase respondendo à pergunta 'para qual objetivo?'"
+            },
+            {
+                pergunta: "Em 'Fez muito calor, entretanto a piscina não foi usada.' A conjunção 'entretanto' poderia ser substituída por:",
+                opcoes: [
+                    { texto: "Portanto", correta: false },
+                    { texto: "Uma vez que", correta: false },
+                    { texto: "No entanto", correta: true, explicacao: "'Entretanto' é uma conjunção adversativa, assim como 'no entanto', 'mas' e 'porém', que indicam uma ideia de oposição." },
+                    { texto: "À medida que", correta: false }
+                ],
+                dica: "Pense em conjunções que introduzem uma ideia de contraste ou oposição. O que se espera quando faz calor?"
+            },
+            {
+                pergunta: "A oração 'Quando a chuva parou, saímos.' é classificada como:",
+                opcoes: [
+                    { texto: "Subordinada adverbial causal", correta: false },
+                    { texto: "Subordinada adverbial condicional", correta: false },
+                    { texto: "Subordinada adverbial temporal", correta: true, explicacao: "A conjunção 'Quando' introduz uma oração que indica a circunstância de tempo em que a ação principal ocorreu." },
+                    { texto: "Subordinada adverbial concessiva", correta: false }
+                ],
+                dica: "O conectivo 'quando' é um indicador de tempo. Ele responde à pergunta 'em que momento?'"
+            },
+            {
+                pergunta: "Em 'Eu te ajudo desde que você me ajude depois.', a conjunção 'desde que' indica:",
+                opcoes: [
+                    { texto: "Tempo", correta: false },
+                    { texto: "Causa", correta: false },
+                    { texto: "Condição", correta: true, explicacao: "'Desde que', neste contexto, tem o sentido de 'se'. A ação de ajudar depende de uma condição futura." },
+                    { texto: "Finalidade", correta: false }
+                ],
+                dica: "A frase estabelece um 'pacto'. Sem a segunda parte, a primeira não acontece."
+            },
+            {
+                pergunta: "A frase 'Ele não fez a prova, como eu havia imaginado.' tem a conjunção 'como' com valor de:",
+                opcoes: [
+                    { texto: "Consequência", correta: false },
+                    { texto: "Comparação", correta: false },
+                    { texto: "Conformidade", correta: true, explicacao: "Neste caso, 'como' indica que a ação ('não fez a prova') ocorreu em conformidade com o que foi imaginado, podendo ser substituída por 'conforme'." },
+                    { texto: "Explicação", correta: false }
+                ],
+                dica: "A conjunção indica que a ação principal está de acordo com um fato ou fonte. Tente substituir por 'conforme' ou 'segundo'."
+            },
+            {
+                pergunta: "Em 'Chorei, pois a cebola me fez chorar.', a conjunção 'pois' é:",
+                opcoes: [
+                    { texto: "Explicativa", correta: true, explicacao: "A conjunção 'pois', quando está na ordem inversa da frase (depois do verbo) ou em uma justificativa, é explicativa." },
+                    { texto: "Conclusiva", correta: false },
+                    { texto: "Causal", correta: false },
+                    { texto: "Condicional", correta: false }
+                ],
+                dica: "A conjunção 'pois' é explicativa quando vem depois do verbo, como na frase acima. Caso viesse antes do verbo, a conjunção seria causal."
+            },
+            {
+                pergunta: "Na frase 'Ele não estudou, mas passou na prova.', a conjunção 'mas' é:",
+                opcoes: [
+                    { texto: "Adversativa", correta: true, explicacao: "A conjunção 'mas' é adversativa, pois introduz uma ideia de oposição entre as orações. A expectativa seria que ele não passasse, mas o resultado foi o oposto." },
+                    { texto: "Aditiva", correta: false },
+                    { texto: "Conclusiva", correta: false },
+                    { texto: "Alternativa", correta: false }
+                ],
+                dica: "A palavra 'mas' é a principal conjunção que expressa oposição. Lembre-se, ela quebra a expectativa."
+            },
+            {
+                pergunta: "A frase 'Apesar de ter chovido, o evento foi realizado.' expressa uma ideia de:",
+                opcoes: [
+                    { texto: "Concessão", correta: true, explicacao: "A locução conjuntiva 'Apesar de' tem valor concessivo, indicando uma ideia contrária ('choveu') que não impediu a ação principal ('o evento foi realizado')." },
+                    { texto: "Condição", correta: false },
+                    { texto: "Finalidade", correta: false },
+                    { texto: "Causa", correta: false }
+                ],
+                dica: "Pense em uma ação que contraria o esperado. A chuva não impediu o evento."
+            },
+            {
+                pergunta: "Em 'O governo investiu, de modo que a economia cresceu.', a conjunção 'de modo que' é:",
+                opcoes: [
+                    { texto: "Aditiva", correta: false },
+                    { texto: "Explicativa", correta: false },
+                    { texto: "Conclusiva", correta: false },
+                    { texto: "Consecutiva", correta: true, explicacao: "'De modo que' introduz a consequência da ação ('o governo investiu')." }
+                ],
+                dica: "A conjunção indica um resultado. 'O que aconteceu como resultado do investimento?'"
+            }
+        ];
+
+        let simuladoCurrentQuestionIndex = 0;
+        let simuladoScore = 0;
+        let simuladoActive = false;
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function loadRanking() {
+            const rankingListFrases = document.getElementById('ranking-list-frases');
+            const rankingDataFrases = JSON.parse(localStorage.getItem('conjuncoesRankingFrases')) || [];
+            rankingListFrases.innerHTML = '';
+            rankingDataFrases.forEach(item => {
+                const li = document.createElement('li');
+                li.innerHTML = `<span class="nome">${item.nome}</span><span>${item.pontos} acertos</span>`;
+                rankingListFrases.appendChild(li);
+            });
+
+            const rankingListSimulado = document.getElementById('ranking-list-simulado');
+            const rankingDataSimulado = JSON.parse(localStorage.getItem('conjuncoesRankingSimulado')) || [];
+            rankingListSimulado.innerHTML = '';
+            rankingDataSimulado.forEach(item => {
+                const li = document.createElement('li');
+                li.innerHTML = `<span class="nome">${item.nome}</span><span>${item.pontos} acertos</span>`;
+                rankingListSimulado.appendChild(li);
+            });
+
+            if (rankingDataFrases.length > 0 || rankingDataSimulado.length > 0) {
+                document.getElementById('ranking-lateral').style.display = 'block';
+            }
+        }
+
+        function saveScore(nome, pontos, tipoRanking) {
+            if (!nome || nome.trim() === '') return;
+
+            const rankingKey = tipoRanking === 'frases' ? 'conjuncoesRankingFrases' : 'conjuncoesRankingSimulado';
+            let rankingData = JSON.parse(localStorage.getItem(rankingKey)) || [];
+
+            const userIndex = rankingData.findIndex(item => item.nome.toLowerCase() === nome.toLowerCase());
+
+            if (userIndex > -1) {
+                if (pontos > rankingData[userIndex].pontos) {
+                    rankingData[userIndex].pontos = pontos;
+                }
+            } else {
+                rankingData.push({ nome, pontos });
+            }
+
+            rankingData.sort((a, b) => b.pontos - a.pontos);
+            localStorage.setItem(rankingKey, JSON.stringify(rankingData));
+            loadRanking();
+        }
+
+        const generateBtn = document.getElementById('generate-btn');
+        const quizPhraseDiv = document.getElementById('quiz-phrase');
+        const quizInput = document.getElementById('quiz-input');
+        const checkBtn = document.getElementById('check-btn');
+        const quizFeedbackDiv = document.getElementById('quiz-feedback');
+
+
+        generateBtn.addEventListener('click', () => {
+            if (quizActive) {
+                showNotification('Jogo em andamento — responda a frase atual.', 'info', 2000);
+                return;
+            }
+            quizScore = 0;
+            quizActive = true;
+            shuffledQuizPhrases = [...quizPhrases];
+            shuffleArray(shuffledQuizPhrases);
+            currentQuizIndex = 0;
+            quizFeedbackDiv.innerHTML = "";
+            generateBtn.disabled = true;
+            showNextQuizPhrase();
+        });
+
+
+        function showNextQuizPhrase() {
+            if (currentQuizIndex >= shuffledQuizPhrases.length) {
+                const nome = prompt("Parabéns, você acertou todas! Qual seu nome para o ranking?");
+                if (nome) saveScore(nome, quizScore, 'frases');
+                quizPhraseDiv.innerHTML = "Parabéns, você acertou todas! Recomece para um novo desafio.";
+                quizActive = false;
+                generateBtn.disabled = false;
+                return;
+            }
+            const current = shuffledQuizPhrases[currentQuizIndex];
+            quizPhraseDiv.innerHTML = `<strong>${quizScore + 1}º acerto:</strong> ${current.text}`;
+            quizInput.value = "";
+            checkBtn.disabled = false;
+        }
+
+
+        checkBtn.addEventListener('click', () => {
+            if (!quizActive) return;
+
+            const userInputRaw = quizInput.value || "";
+            function normalize(str) {
+                return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+                           .replace(/[^\w\s]/g, '')
+                           .toLowerCase().trim();
+            }
+            function singularize(str) {
+                let s = str.trim();
+                s = s.replace(/\b(conjun[cç]ao|conjuncao|conjunção|conjuncoes|conjuncões|conjuncoes|tipo|classe)\b/g, '').trim();
+                if (s.length > 3 && s.endsWith('s')) {
+                    s = s.slice(0, -1);
+                }
+                return s;
+            }
+
+            const userNorm = singularize(normalize(userInputRaw));
+            const current = shuffledQuizPhrases[currentQuizIndex];
+            const correctType = current.type || '';
+            const correctNorm = singularize(normalize(correctType));
+
+            const isMatch = (userNorm === correctNorm) || (userNorm.indexOf(correctNorm) !== -1) || (correctNorm.indexOf(userNorm) !== -1);
+
+            if (isMatch && userNorm !== '') {
+                quizScore++;
+                quizFeedbackDiv.innerHTML = `<p class='resposta'>Correto!</p><p>${current.tip}</p>`;
+                currentQuizIndex++;
+                if (currentQuizIndex < shuffledQuizPhrases.length) {
+                    setTimeout(showNextQuizPhrase, 1200);
+                } else {
+                    const nome = prompt("Parabéns! Você acertou todas. Qual seu nome para o ranking?");
+                    if (nome) saveScore(nome, quizScore, 'frases');
+                    quizPhraseDiv.innerHTML = "Parabéns, você acertou todas! Recomece para um novo desafio.";
+                    quizActive = false;
+                }
+            } else {
+                quizFeedbackDiv.innerHTML = `<p class='incorreta'>Incorreto. A resposta correta é: <strong>${current.type}</strong>.</p><p>${current.tip}</p>`;
+                quizActive = false;
+                checkBtn.disabled = true;
+                generateBtn.disabled = false;
+                const nome = prompt(`Fim do jogo! Você fez ${quizScore} acertos. Qual seu nome para o ranking?`);
+                if (nome) saveScore(nome, quizScore, 'frases');
+            }
+        });
+
+
+        const simuladoGame = document.getElementById('simulado-game');
+        const iniciarSimuladoBtn = document.getElementById('iniciar-simulado-btn');
+        const perguntaDiv = document.getElementById('simulado-pergunta');
+        const opcoesDiv = document.getElementById('simulado-opcoes');
+        const feedbackSimuladoDiv = document.getElementById('simulado-feedback');
+        const pulosRestantesSpan = document.getElementById('pulos-restantes');
+        const pularBtn = document.getElementById('pular-btn');
+        const dicaBtn = document.getElementById('dica-btn');
+        const dicaBox = document.getElementById('dica-box');
+
+        let shuffledSimuladoQuestions = [];
+        function loadSimuladoQuestion() {
+            if (simuladoCurrentQuestionIndex >= shuffledSimuladoQuestions.length) {
+                const nome = prompt(`Parabéns, você completou o jogo! Acertou ${simuladoScore} de ${shuffledSimuladoQuestions.length}. Qual seu nome para o ranking?`);
+                if (nome) saveScore(nome, simuladoScore, 'simulado');
+                endSimuladoGame();
+                return;
+            }
+
+            const currentQuestion = shuffledSimuladoQuestions[simuladoCurrentQuestionIndex];
+            perguntaDiv.innerHTML = `<strong>Pergunta ${simuladoCurrentQuestionIndex + 1}:</strong> ${currentQuestion.pergunta}`;
+            opcoesDiv.innerHTML = "";
+            feedbackSimuladoDiv.innerHTML = "";
+            dicaBox.style.display = 'none';
+
+            currentQuestion.opcoes.forEach((op) => {
+                const button = document.createElement('button');
+                button.textContent = op.texto;
+                button.onclick = () => selectSimuladoOption(button, op);
+                opcoesDiv.appendChild(button);
+            });
+        }
+
+        function selectSimuladoOption(button, option) {
+            Array.from(opcoesDiv.children).forEach(btn => btn.style.pointerEvents = 'none');
+
+            if (option.correta) {
+                simuladoScore++;
+                button.classList.add('opc-correta');
+                feedbackSimuladoDiv.innerHTML = `<p class='opc-correta'><strong>Correto!</strong></p><p style="color: #0c5460;">${option.explicacao}</p>`;
+                setTimeout(() => {
+                    simuladoCurrentQuestionIndex++;
+                    loadSimuladoQuestion();
+                }, 2500);
+            } else {
+                button.classList.add('opc-incorreta');
+                const correctOption = shuffledSimuladoQuestions[simuladoCurrentQuestionIndex].opcoes.find(op => op.correta);
+                const correctButton = Array.from(opcoesDiv.children).find(btn => btn.textContent === correctOption.texto);
+                if (correctButton) {
+                    correctButton.classList.add('opc-correta');
+                }
+                feedbackSimuladoDiv.innerHTML = `<p class='opc-incorreta'><strong>Incorreto.</strong> A resposta correta é: <strong>${correctOption.texto}</strong>.</p><p style="color: #0c5460;">${correctOption.explicacao}</p>`;
+                const nome = prompt(`Fim do jogo! Você fez ${simuladoScore} acertos. Qual seu nome para o ranking?`);
+                if (nome) saveScore(nome, simuladoScore, 'simulado');
+                endSimuladoGame();
+            }
+        }
+
+        function endSimuladoGame() {
+            perguntaDiv.textContent = "Jogo do Milhão finalizado! Clique em 'Iniciar Jogo' para recomeçar.";
+            opcoesDiv.innerHTML = "";
+            simuladoGame.style.display = 'none';
+            iniciarSimuladoBtn.style.display = 'block';
+        }
+
+        iniciarSimuladoBtn.onclick = () => {
+            simuladoCurrentQuestionIndex = 0;
+            simuladoScore = 0;
+            pulos = 3;
+            dicaUsada = false;
+            pulosRestantesSpan.textContent = pulos;
+            pularBtn.classList.remove('usada');
+            dicaBtn.classList.remove('usada');
+            dicaBox.style.display = 'none';
+
+            shuffledSimuladoQuestions = [...simuladoQuestions];
+            shuffleArray(shuffledSimuladoQuestions);
+
+            simuladoGame.style.display = 'block';
+            iniciarSimuladoBtn.style.display = 'none';
+            loadSimuladoQuestion();
+        };
+
+        pularBtn.onclick = () => {
+            if (pulos > 0) {
+                pulos--;
+                pulosRestantesSpan.textContent = pulos;
+                simuladoCurrentQuestionIndex++;
+                loadSimuladoQuestion();
+            }
+            if (pulos === 0) {
+                pularBtn.classList.add('usada');
+            }
+        };
+
+        dicaBtn.onclick = () => {
+            if (!dicaUsada) {
+                dicaUsada = true;
+                dicaBtn.classList.add('usada');
+                dicaBox.style.display = 'block';
+                dicaBox.textContent = shuffledSimuladoQuestions[simuladoCurrentQuestionIndex].dica;
+            }
+        };
+
+        function toggleConteudo() {
+            var conteudo = document.getElementById("exemplos-detalhados-conteudo");
+            var botao = document.getElementById("btn-toggle");
+            if (conteudo.style.display === "none") {
+                conteudo.style.display = "block";
+                botao.textContent = "Esconder exemplos";
+            } else {
+                conteudo.style.display = "none";
+                botao.textContent = "Mostrar exemplos";
+            }
+        }
+
+        function showNotification(message, type = 'info', duration = 3000) {
+            const notice = document.getElementById('ranking-notice');
+            if (!notice) {
+                alert(message);
+                return;
+            }
+            notice.textContent = message;
+            notice.className = '';
+            notice.classList.add(type);
+            notice.style.display = 'block';
+            setTimeout(() => {
+                notice.style.display = 'none';
+            }, duration);
+        }
+
+        function resetRanking() {
+            if (confirm('Tem certeza que deseja apagar todo o ranking?')) {
+                localStorage.removeItem('conjuncoesRankingFrases');
+                localStorage.removeItem('conjuncoesRankingSimulado');
+                loadRanking();
+                showNotification('Ranking apagado com sucesso!', 'success');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadRanking);
+    </script>
+</body>
+</html>
